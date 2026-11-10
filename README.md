@@ -1,199 +1,201 @@
 # 🔍 Python Scanner
 
-ابزار تحلیل کد و بررسی امنیت پروژه‌های پایتون
+A code analysis and security inspection tool for Python projects.
 
 ---
 
-درباره پروژه
+## About the Project
 
-Python Scanner ابزاری برای بررسی و تحلیل فایل‌ها و پروژه‌های نوشته‌شده با زبان پایتون است.
+Python Scanner is a tool for inspecting and analyzing Python files and projects.
 
-این برنامه با استفاده از Python و Kivy توسعه داده شده و تلاش می‌کند چند قابلیت کاربردی برای بررسی کد را در یک محیط واحد در اختیار برنامه‌نویس قرار دهد.
+The application is developed with Python and Kivy and aims to bring several practical code-inspection capabilities together in one environment.
 
-تمرکز اصلی پروژه روی پیدا کردن مشکلات احتمالی در کد، بررسی ساختار دستورات، شناسایی اطلاعات حساس و بررسی وابستگی‌های پروژه است.
+The project's main focus is finding potential code issues, examining statement structure, detecting sensitive information, and inspecting project dependencies.
 
-نکته مهم در طراحی این ابزار، استفاده از Static Analysis است؛ یعنی کد منبع برای بررسی خوانده و تحلیل می‌شود، بدون اینکه خود برنامه مورد بررسی اجرا شود.
-
----
-
-⚙️ نحوه عملکرد
-
-فرایند بررسی در Python Scanner از انتخاب فایل شروع می‌شود و پس از آماده‌سازی اطلاعات، بخش‌های مختلف تحلیل روی آن انجام می‌شوند.
-
-01 — دریافت فایل یا پوشه
-
-برای شروع، کاربر می‌تواند یک فایل پایتون یا یک پوشه کامل از پروژه را انتخاب کند.
-
-در نسخه اندروید، انتخاب فایل و پوشه از طریق Android Storage Access Framework انجام می‌شود.
-
-این سیستم پنجره انتخاب فایل خود اندروید را باز می‌کند و کاربر می‌تواند از طریق فایل‌منیجر به مسیر موردنظر دسترسی داشته باشد.
-
-در حالت انتخاب پوشه، برنامه فایل‌های مرتبط با پروژه را پیدا می‌کند؛ از جمله:
-
-- فایل‌های ".py"
-- فایل "requirements.txt"
-- فایل "pyproject.toml"
-
-برای جلوگیری از پردازش بیش از حد اطلاعات، محدودیت‌هایی برای تعداد فایل‌ها، عمق پوشه‌ها و حجم داده‌ها در نظر گرفته شده است.
-
-فایل‌های انتخاب‌شده از طریق دسترسی اندروید خوانده شده و برای پردازش در فضای داخلی برنامه آماده می‌شوند.
-
-02 — آماده‌سازی و خواندن کد
-
-بعد از دریافت فایل‌ها، محتوای آن‌ها خوانده و برای تحلیل آماده می‌شود.
-
-در این مرحله برنامه فایل‌های قابل بررسی را شناسایی می‌کند و اطلاعات موردنیاز بخش‌های مختلف تحلیل را استخراج می‌کند.
-
-در این فرایند، فایل‌های منبع اجرا یا Import نمی‌شوند؛ محتوای آن‌ها به‌عنوان ورودی تحلیل استفاده می‌شود.
-
-03 — تحلیل ساختار کد (AST)
-
-یکی از بخش‌های اصلی برنامه بر پایه ماژول استاندارد AST پایتون ساخته شده است.
-
-AST یا Abstract Syntax Tree ساختار دستوری کد را به شکل یک درخت قابل پردازش نمایش می‌دهد.
-
-به کمک این روش، برنامه می‌تواند ساختارهایی مانند موارد زیر را بررسی کند:
-
-- تعریف تابع و کلاس
-- شرط‌ها و حلقه‌ها
-- دستورات Import
-- فراخوانی توابع
-- ساختارهای مختلف دستوری
-
-این روش نسبت به جست‌وجوی ساده متن، اطلاعات ساختاری بیشتری در اختیار تحلیل‌گر قرار می‌دهد.
-
-همچنین اگر فایل دارای خطاهای نحوی باشد، مانند پرانتز بسته‌نشده یا ساختار نامعتبر یک دستور، خطای مربوط به تجزیه کد قابل شناسایی است.
-
-04 — بررسی امنیتی
-
-بخش امنیتی برنامه برای پیدا کردن نشانه‌های احتمالی اطلاعات حساس و الگوهای مشکوک طراحی شده است.
-
-در این قسمت از Regular Expressions، الگوهای متنی و تحلیل آنتروپی استفاده می‌شود.
-
-مواردی که بررسی می‌شوند شامل:
-
-- کلیدهای API
-- توکن‌های دسترسی
-- رمزهای عبور احتمالی
-- رشته‌های محرمانه
-- مقادیر مشکوک در کد
-
-Entropy Analysis
-
-گاهی اطلاعات حساس در قالب رشته‌هایی قرار دارند که الگوی مشخصی ندارند.
-
-در چنین شرایطی، آنتروپی می‌تواند به شناسایی رشته‌های دارای تنوع بالای کاراکتر کمک کند.
-
-البته آنتروپی بالا به‌تنهایی به معنی وجود اطلاعات محرمانه نیست و صرفاً یکی از معیارهای تشخیص موارد مشکوک است.
-
-Secret Masking
-
-برای جلوگیری از نمایش کامل اطلاعات حساس در گزارش، برنامه امکان مخفی‌سازی بخش اصلی مقدار شناسایی‌شده را نیز دارد.
-
-05 — بررسی وابستگی‌ها
-
-بخش دیگری از تحلیل به وابستگی‌های پروژه اختصاص دارد.
-
-برنامه فایل‌های متداول مدیریت پکیج را بررسی می‌کند و اطلاعات مربوط به کتابخانه‌های استفاده‌شده را استخراج می‌کند.
-
-فرمت‌های پشتیبانی‌شده:
-
-- "requirements.txt"
-- "pyproject.toml"
-
-برای مثال، عبارت "scikit-learn>=1.4" پردازش می‌شود تا نام بسته از شرط نسخه جدا شود.
-
-این قابلیت برای شناخت ساختار وابستگی‌های یک پروژه کاربرد دارد؛ اما به‌تنهایی امنیت یا به‌روز بودن کتابخانه‌ها را تأیید نمی‌کند.
-
-06 — ابزارهای تحلیل تکمیلی
-
-در کنار تحلیل‌گر داخلی، امکان استفاده از دو ابزار شناخته‌شده پایتون نیز در نظر گرفته شده است.
-
-ابزار| کاربرد
-Ruff| بررسی مشکلات کدنویسی و برخی تخلفات استاندارد
-Bandit| شناسایی برخی الگوهای امنیتی مشکوک
-
-این ابزارها به‌صورت اختیاری قابل استفاده هستند و در صورت نصب نبودن آن‌ها، بخش‌های اصلی تحلیل داخلی همچنان قابل استفاده‌اند.
-
-07 — پردازش در پس‌زمینه
-
-تحلیل پروژه‌های بزرگ ممکن است زمان‌بر باشد. به همین دلیل عملیات اصلی تحلیل در یک Thread جداگانه انجام می‌شود.
-
-در ساختار برنامه از موارد زیر استفاده شده است:
-
-- "Threading" برای اجرای عملیات در پس‌زمینه
-- "Queue" برای انتقال اطلاعات بین بخش پردازش و رابط کاربری
-- "BackgroundTask" برای مدیریت وظایف تحلیل
-
-این ساختار کمک می‌کند رابط کاربری هنگام بررسی فایل‌ها کمتر درگیر عملیات سنگین شود و پاسخ‌گویی خود را حفظ کند.
-
-08 — گزارش نهایی
-
-پس از پایان بررسی، نتایج تحلیل برای نمایش در رابط کاربری آماده می‌شوند.
-
-اطلاعات قابل ارائه شامل موارد زیر است:
-
-- فایل‌های بررسی‌شده
-- وضعیت تحلیل نحوی
-- مشکلات شناسایی‌شده
-- یافته‌های امنیتی احتمالی
-- اطلاعات حساس مخفی‌شده
-- وابستگی‌های استخراج‌شده
-- نتایج ابزارهای تکمیلی
-
-همچنین امکان ذخیره گزارش در قالب JSON وجود دارد تا اطلاعات تحلیل خارج از محیط برنامه نیز قابل استفاده باشند.
+An important design principle is the use of **Static Analysis**: source code is read and analyzed without executing the program being inspected.
 
 ---
 
-🧩 فناوری‌های استفاده‌شده
+## ⚙️ How It Works
 
-فناوری| نقش در پروژه
-Python| زبان اصلی توسعه
-Kivy| رابط کاربری گرافیکی
-AST| تحلیل ساختار کد
-Regex| شناسایی الگوهای متنی
-Entropy| بررسی رشته‌های مشکوک
-Threading| پردازش پس‌زمینه
-Queue| انتقال اطلاعات پردازش
-JSON| ذخیره گزارش
-Android SAF| انتخاب فایل و پوشه
-Ruff| تحلیل تکمیلی کد
-Bandit| بررسی امنیتی تکمیلی
+The inspection process starts when a file or folder is selected. After the input is prepared, different analysis components process it.
+
+### 01 — Selecting Files or Folders
+
+Users can select a single Python file or an entire project folder.
+
+On Android, file and folder selection uses the Android Storage Access Framework (SAF).
+
+This opens Android's native file picker, allowing users to navigate to the desired location through the file manager.
+
+When a folder is selected, the application looks for relevant project files, including:
+
+- `.py` files
+- `requirements.txt`
+- `pyproject.toml`
+
+Limits on file count, folder depth, and data size help prevent excessive processing.
+
+Selected files are read through Android's storage access mechanism and prepared in the application's internal workspace.
+
+### 02 — Preparing and Reading Source Code
+
+After files are collected, their contents are read and prepared for analysis.
+
+The application identifies files that can be inspected and extracts the information required by the different analysis components.
+
+Source files are not executed or imported during this process; their contents are treated as analysis input.
+
+### 03 — Code Structure Analysis (AST)
+
+One of the application's main components is built around Python's standard `ast` module.
+
+AST, or Abstract Syntax Tree, represents the syntactic structure of code as a processable tree.
+
+This allows the application to inspect structures such as:
+
+- Function and class definitions
+- Conditions and loops
+- Import statements
+- Function calls
+- Different statement structures
+
+Compared with simple text searching, this approach provides more structural information to the analyzer.
+
+It can also detect parsing errors in files with syntax problems, such as an unclosed parenthesis or an invalid statement structure.
+
+### 04 — Security Inspection
+
+The security component is designed to find possible signs of sensitive information and suspicious patterns.
+
+It uses Regular Expressions, text patterns, and entropy analysis.
+
+Items inspected include:
+
+- API keys
+- Access tokens
+- Possible passwords
+- Secret strings
+- Suspicious values in source code
+
+#### Entropy Analysis
+
+Sometimes sensitive information is stored in strings that do not follow a recognizable pattern.
+
+In such cases, entropy can help identify strings with a high diversity of characters.
+
+High entropy alone does not mean that a string contains confidential information; it is only one signal used to identify suspicious values.
+
+#### Secret Masking
+
+To avoid displaying the full value of detected sensitive information in reports, the application can mask the main part of a detected value.
+
+### 05 — Dependency Inspection
+
+Another part of the analysis focuses on project dependencies.
+
+The application reads common package-management files and extracts information about the libraries used by the project.
+
+Supported formats:
+
+- `requirements.txt`
+- `pyproject.toml`
+
+For example, the expression `scikit-learn>=1.4` is processed so the package name can be separated from its version constraint.
+
+This feature helps identify a project's dependency structure; it does not independently verify library security or whether packages are up to date.
+
+### 06 — Additional Analysis Tools
+
+Alongside the built-in analyzer, the application can optionally use two well-known Python tools.
+
+| Tool | Purpose |
+|---|---|
+| Ruff | Checks code issues and certain style violations |
+| Bandit | Detects some potentially suspicious security patterns |
+
+These tools are optional. The main built-in analysis components remain available if they are not installed.
+
+### 07 — Background Processing
+
+Analyzing large projects can take time. For this reason, the main analysis operations run in a separate thread.
+
+The application uses:
+
+- `Threading` for background operations
+- `Queue` to transfer information between processing and the user interface
+- `BackgroundTask` to manage analysis tasks
+
+This structure helps keep the user interface responsive while files are being inspected.
+
+### 08 — Final Report
+
+After inspection is complete, the analysis results are prepared for display in the user interface.
+
+The report can include:
+
+- Inspected files
+- Syntax analysis status
+- Detected issues
+- Potential security findings
+- Masked sensitive information
+- Extracted dependencies
+- Results from additional tools
+
+Reports can also be saved in JSON format so analysis data can be used outside the application.
 
 ---
 
-📱 رابط کاربری و محیط اجرا
+## 🧩 Technologies Used
 
-رابط گرافیکی برنامه با Kivy توسعه داده شده است.
-
-یکی از اهداف طراحی، فراهم کردن امکان استفاده از ابزار روی گوشی‌های اندرویدی است؛ به‌طوری که کاربر بتواند فایل یا پوشه موردنظر را انتخاب کند، تحلیل را شروع کند و نتایج را در محیط برنامه مشاهده کند.
-
-ساختار پروژه به‌صورت یک فایل پایتون اصلی طراحی شده است و بخش‌های دریافت ورودی، تحلیل و نمایش نتایج در همان برنامه قرار دارند.
-
----
-
-نکاتی درباره دقت تحلیل
-
-Python Scanner یک ابزار تحلیل ایستا است و قرار نیست تمام مشکلات احتمالی یک نرم‌افزار را تشخیص دهد.
-
-- بعضی یافته‌ها ممکن است مثبت کاذب باشند.
-- همه مشکلات زمان اجرا از طریق تحلیل ایستا قابل شناسایی نیستند.
-- تشخیص یک رشته مشکوک لزوماً به معنی وجود آسیب‌پذیری نیست.
-- بررسی امنیت کتابخانه‌ها با استخراج نام وابستگی‌ها یکسان نیست.
-- نتایج ابزارهای خارجی به نصب و دسترس‌پذیری آن‌ها وابسته است.
-
-به همین دلیل، نتایج باید به‌عنوان اطلاعات کمکی برای بررسی بیشتر در نظر گرفته شوند.
+| Technology | Role in the Project |
+|---|---|
+| Python | Main development language |
+| Kivy | Graphical user interface |
+| AST | Code structure analysis |
+| Regex | Text-pattern detection |
+| Entropy | Inspection of suspicious strings |
+| Threading | Background processing |
+| Queue | Processing data transfer |
+| JSON | Report storage |
+| Android SAF | File and folder selection |
+| Ruff | Additional code analysis |
+| Bandit | Additional security inspection |
 
 ---
 
-🎯 هدف پروژه
+## 📱 User Interface and Runtime Environment
 
-هدف از توسعه Python Scanner، ساخت ابزاری کاربردی برای بررسی کدهای پایتون است؛ ابزاری که چند روش تحلیل را در کنار هم قرار دهد و استفاده از آن را در محیط موبایل نیز ممکن کند.
+The graphical interface is developed with Kivy.
 
-این پروژه با تمرکز بر تحلیل ساختاری، بررسی امنیتی و ساده‌تر کردن فرایند بررسی فایل‌های پایتون توسعه داده شده است.
+One of the project's goals is to make the tool usable on Android phones. Users can select a file or folder, start an analysis, and view the results inside the application.
+
+The project is currently designed around a single main Python file, with input handling, analysis, and result presentation contained in the same application.
 
 ---
 
-Python Scanner
+## Notes on Analysis Accuracy
+
+Python Scanner is a static-analysis tool and is not intended to detect every possible software issue.
+
+- Some findings may be false positives.
+- Not all runtime problems can be detected through static analysis.
+- Detecting a suspicious string does not necessarily mean a vulnerability exists.
+- Extracting dependency names is not the same as checking library security.
+- Results from external tools depend on their installation and availability.
+
+For these reasons, results should be treated as supporting information for further review.
+
+---
+
+## 🎯 Project Goal
+
+The goal of Python Scanner is to build a practical tool for inspecting Python code—one that combines several analysis methods and can also be used in a mobile environment.
+
+The project focuses on structural analysis, security inspection, and making the process of reviewing Python files easier.
+
+---
+
+**Python Scanner**
 
 Code inspection · Static analysis · Security checks
