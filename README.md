@@ -1,216 +1,120 @@
-# 🔍 Python Scanner
+# Python Scanner
 
-A code analysis and security inspection tool for Python projects.
+**Python Scanner** is a Kivy-based static analysis application for reviewing Python files and project folders. It combines syntax inspection, dependency analysis, and security-oriented checks in a mobile-friendly interface, with Android/Pydroid 3 as an important target environment.
 
----
+> **Safety by design:** the scanner reads and analyzes source files; it does not import or execute the project being inspected.
 
-## About the Project
+## Features
 
-Python Scanner is a tool for inspecting and analyzing Python files and projects.
-
-The application is developed with Python and Kivy and aims to bring several practical code-inspection capabilities together in one environment.
-
-The project's main focus is finding potential code issues, examining statement structure, detecting sensitive information, and inspecting project dependencies.
-
-An important design principle is the use of **Static Analysis**: source code is read and analyzed without executing the program being inspected.
-
----
-
-## ⚙️ How It Works
-
-The inspection process starts when a file or folder is selected. After the input is prepared, different analysis components process it.
-
-### 01 — Selecting Files or Folders
-
-Users can select a single Python file or an entire project folder.
-
-On Android, file and folder selection uses the Android Storage Access Framework (SAF).
-
-This opens Android's native file picker, allowing users to navigate to the desired location through the file manager.
-
-When a folder is selected, the application looks for relevant project files, including:
-
-- `.py` files
-- `requirements.txt`
-- `pyproject.toml`
-
-Limits on file count, folder depth, and data size help prevent excessive processing.
-
-Selected files are read through Android's storage access mechanism and prepared in the application's internal workspace.
-
-### 02 — Preparing and Reading Source Code
-
-After files are collected, their contents are read and prepared for analysis.
-
-The application identifies files that can be inspected and extracts the information required by the different analysis components.
-
-Source files are not executed or imported during this process; their contents are treated as analysis input.
-
-### 03 — Code Structure Analysis (AST)
-
-One of the application's main components is built around Python's standard `ast` module.
-
-AST, or Abstract Syntax Tree, represents the syntactic structure of code as a processable tree.
-
-This allows the application to inspect structures such as:
-
-- Function and class definitions
-- Conditions and loops
-- Import statements
-- Function calls
-- Different statement structures
-
-Compared with simple text searching, this approach provides more structural information to the analyzer.
-
-It can also detect parsing errors in files with syntax problems, such as an unclosed parenthesis or an invalid statement structure.
-
-### 04 — Security Inspection
-
-The security component is designed to find possible signs of sensitive information and suspicious patterns.
-
-It uses Regular Expressions, text patterns, and entropy analysis.
-
-Items inspected include:
-
-- API keys
-- Access tokens
-- Possible passwords
-- Secret strings
-- Suspicious values in source code
-
-#### Entropy Analysis
-
-Sometimes sensitive information is stored in strings that do not follow a recognizable pattern.
-
-In such cases, entropy can help identify strings with a high diversity of characters.
-
-High entropy alone does not mean that a string contains confidential information; it is only one signal used to identify suspicious values.
-
-#### Secret Masking
-
-To avoid displaying the full value of detected sensitive information in reports, the application can mask the main part of a detected value.
-
-### 05 — Dependency Inspection
-
-Another part of the analysis focuses on project dependencies.
-
-The application reads common package-management files and extracts information about the libraries used by the project.
-
-Supported formats:
-
-- `requirements.txt`
-- `pyproject.toml`
-
-For example, the expression `scikit-learn>=1.4` is processed so the package name can be separated from its version constraint.
-
-This feature helps identify a project's dependency structure; it does not independently verify library security or whether packages are up to date.
-
-### 06 — Additional Analysis Tools
-
-Alongside the built-in analyzer, the application can optionally use two well-known Python tools.
-
-| Tool | Purpose |
+| Area | What it does |
 |---|---|
-| Ruff | Checks code issues and certain style violations |
-| Bandit | Detects some potentially suspicious security patterns |
+| Project discovery | Scans selected Python files or folders and applies limits and ignore rules during discovery. |
+| Syntax analysis | Uses Python's `ast` parser to identify syntax errors and inspect code structure. |
+| Secret detection | Searches for credential-like patterns using regular expressions and entropy heuristics; masks detected values in findings. |
+| Dependency analysis | Reads `requirements.txt` and `pyproject.toml`, and compares declared packages with imports found in source files. |
+| Ruff integration | Optionally runs Ruff for additional linting and code-quality findings. |
+| Bandit integration | Optionally runs Bandit for additional security-oriented checks. |
+| Background scanning | Runs analysis work off the UI thread and communicates progress/results through a queue. |
+| Reports | Displays findings in the app and supports exporting scan results as JSON. |
 
-These tools are optional. The main built-in analysis components remain available if they are not installed.
+Ruff and Bandit are optional. If they are unavailable, the built-in analysis components can still run.
 
-### 07 — Background Processing
+## Screenshots
 
-Analyzing large projects can take time. For this reason, the main analysis operations run in a separate thread.
+*Screenshots can be added here as the interface stabilizes.*
 
-The application uses:
+## Requirements
 
-- `Threading` for background operations
-- `Queue` to transfer information between processing and the user interface
-- `BackgroundTask` to manage analysis tasks
+- Python 3.9+
+- Kivy 2.2+
+- Android with Pydroid 3 is a primary target; desktop environments with a working Kivy installation may also be used.
 
-This structure helps keep the user interface responsive while files are being inspected.
+Optional external analyzers:
 
-### 08 — Final Report
+```bash
+pip install ruff bandit
+```
 
-After inspection is complete, the analysis results are prepared for display in the user interface.
+The availability of Kivy and its Android dependencies depends on the runtime environment. On Android, use a Pydroid 3 setup that supports Kivy rather than assuming a standard desktop installation command will work.
 
-The report can include:
+## Run
 
-- Inspected files
-- Syntax analysis status
-- Detected issues
-- Potential security findings
-- Masked sensitive information
-- Extracted dependencies
-- Results from additional tools
+From the repository directory:
 
-Reports can also be saved in JSON format so analysis data can be used outside the application.
+```bash
+python main.py
+```
 
----
+The legacy launcher is retained for compatibility:
 
-## 🧩 Technologies Used
+```bash
+python python_scanner.py
+```
 
-| Technology | Role in the Project |
-|---|---|
-| Python | Main development language |
-| Kivy | Graphical user interface |
-| AST | Code structure analysis |
-| Regex | Text-pattern detection |
-| Entropy | Inspection of suspicious strings |
-| Threading | Background processing |
-| Queue | Processing data transfer |
-| JSON | Report storage |
-| Android SAF | File and folder selection |
-| Ruff | Additional code analysis |
-| Bandit | Additional security inspection |
+Both commands start the same application.
 
----
+## Project structure
 
-## 📱 User Interface and Runtime Environment
+```text
+Python-Scanner/
+├── core/
+│   ├── __init__.py
+│   └── engine.py       # Discovery, analyzers, scan engine, and JSON reporting
+├── interface/
+│   ├── __init__.py
+│   └── app.py          # Kivy interface and application lifecycle
+├── main.py             # Canonical application entry point
+├── python_scanner.py   # Backward-compatible launcher and API re-export
+└── README.md
+```
 
-The graphical interface is developed with Kivy.
+The code is intentionally divided along two main responsibilities:
 
-One of the project's goals is to make the tool usable on Android phones. Users can select a file or folder, start an analysis, and view the results inside the application.
+- **Core** contains scanning and analysis logic and does not depend on the Kivy interface.
+- **Interface** contains the Kivy application and imports the core engine.
 
-The project is currently designed around a single main Python file, with input handling, analysis, and result presentation contained in the same application.
+This keeps the module structure small while making the analysis engine easier to maintain and test independently.
 
----
+## How a scan works
 
-## Notes on Analysis Accuracy
+1. Select a Python file or project folder in the application.
+2. The discovery layer collects supported source and dependency files, subject to configured limits and exclusions.
+3. The built-in analyzers inspect syntax, source structure, possible secrets, and dependency information.
+4. If installed and available, Ruff and Bandit can contribute additional findings.
+5. Results are presented in the interface and can be exported as JSON.
 
-Python Scanner is a static-analysis tool and is not intended to detect every possible software issue.
+## Understanding findings
 
-- Some findings may be false positives.
-- Not all runtime problems can be detected through static analysis.
-- Detecting a suspicious string does not necessarily mean a vulnerability exists.
-- Extracting dependency names is not the same as checking library security.
-- Results from external tools depend on their installation and availability.
+Static analysis can identify suspicious patterns, syntax problems, and useful review signals, but it cannot prove that a program is secure or detect every runtime issue.
 
-For these reasons, results should be treated as supporting information for further review.
+- A possible secret match may be a false positive.
+- High entropy is a heuristic, not proof that a string is a credential.
+- A detected pattern does not automatically mean an exploitable vulnerability exists.
+- Dependency extraction is not a full vulnerability audit and does not guarantee that packages are current or safe.
+- Optional-tool findings depend on the installed tool version and its execution environment.
 
----
+Review findings in context before making changes. Do not treat a clean scan as a security guarantee.
 
-## 🎯 Project Goal
+## Privacy and safe use
 
-The goal of Python Scanner is to build a practical tool for inspecting Python code—one that combines several analysis methods and can also be used in a mobile environment.
+- The project being scanned is analyzed as source input; it is not intentionally executed by the scanner.
+- Detected secret values are masked in findings to reduce accidental exposure.
+- Scan reports may contain file paths, code locations, package names, and finding details. Review a report before sharing it.
+- Only scan code and folders you own or are authorized to inspect.
 
-The project focuses on structural analysis, security inspection, and making the process of reviewing Python files easier.
+## Current scope
 
----
+Python Scanner focuses on static inspection of Python projects and common dependency declaration files. It is not a replacement for runtime testing, code review, a dedicated software-composition analysis service, or a complete security audit.
 
-**Python Scanner**
+## Contributing
 
-Code inspection · Static analysis · Security checks
+Issues and focused pull requests are welcome. When reporting a problem, include:
 
-## Project layout
+- Your operating system and Python version
+- Kivy version and runtime (for example, Pydroid 3)
+- The steps needed to reproduce the issue
+- Relevant error output, with tokens, passwords, and other secrets removed
 
-The application is organized into a small number of responsibility-based
-modules:
+## License
 
-- `core/engine.py` contains the scanning models, discovery, analyzers,
-  execution engine, background worker, and JSON reporting.
-- `interface/app.py` contains the Kivy widgets, screens, and application
-  lifecycle. It imports the engine through one stable module boundary.
-- `main.py` is the canonical entry point.
-- `python_scanner.py` remains as a backwards-compatible launcher.
-
-Run the application with `python main.py` or continue using
-`python python_scanner.py`. Both entry points start the same application.
+No license is specified in this repository yet. Until a license is added, the default copyright rules apply; please do not assume the code is licensed for reuse or redistribution.
