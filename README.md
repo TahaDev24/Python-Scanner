@@ -199,3 +199,18 @@ The project focuses on structural analysis, security inspection, and making the 
 **Python Scanner**
 
 Code inspection · Static analysis · Security checks
+
+## Project layout
+
+The application is organized into a small number of responsibility-based
+modules:
+
+- `core/engine.py` contains the scanning models, discovery, analyzers,
+  execution engine, background worker, and JSON reporting.
+- `interface/app.py` contains the Kivy widgets, screens, and application
+  lifecycle. It imports the engine through one stable module boundary.
+- `main.py` is the canonical entry point.
+- `python_scanner.py` remains as a backwards-compatible launcher.
+
+Run the application with `python main.py` or continue using
+`python python_scanner.py`. Both entry points start the same application.
