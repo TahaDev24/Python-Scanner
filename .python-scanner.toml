@@ -1,0 +1,5 @@
+[scanner]
+max_files = 5000
+max_file_size = 1000000
+max_line_length = 100
+exclude = [".git/**", ".venv/**", "venv/**", "__pycache__/**", "build/**", "dist/**"]

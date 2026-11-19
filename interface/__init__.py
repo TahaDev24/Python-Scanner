@@ -1,1 +1,0 @@
-"""Kivy user interface package."""
