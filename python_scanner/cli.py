@@ -5,6 +5,7 @@ import sys
 from pathlib import Path
 
 from python_scanner import __version__
+from python_scanner.analyzers.standards import StandardsAnalyzer
 from python_scanner.core.config import ScannerConfig
 from python_scanner.core.engine import Scanner
 from python_scanner.reporting import to_json, to_text, write_json
@@ -48,9 +49,8 @@ def main(argv: list[str] | None = None) -> int:
         scanner = Scanner(config)
         if args.max_line_length is not None:
             scanner.analyzers = [
-                analyzer if analyzer.name != "standards" else
-                __import__("python_scanner.analyzers.standards", fromlist=["StandardsAnalyzer"])
-                .StandardsAnalyzer(config.max_line_length)
+                analyzer if analyzer.name != "standards"
+                else StandardsAnalyzer(config.max_line_length)
                 for analyzer in scanner.analyzers
             ]
         result = scanner.scan(args.target)

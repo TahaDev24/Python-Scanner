@@ -29,7 +29,7 @@ Every reported issue includes a rule identifier, severity, location, and actiona
 
 - Analyze a single Python file or an entire project directory.
 - Parse source with Python's AST without importing or executing the target project.
-- Inspect syntax, maintainability, complexity, coding conventions, common security-sensitive patterns, and declared dependencies.
+- Inspect syntax, maintainability, complexity, architecture, coding conventions, performance signals, security patterns, and declared dependencies.
 - Produce deterministic JSON reports for CI and tooling.
 - Use the same engine from the CLI and optional Kivy desktop interface.
 - Configure exclusions and file-size limits.
@@ -83,14 +83,16 @@ Kivy availability depends on your operating system and Python environment. On An
 | Area | Built-in checks |
 |---|---|
 | Syntax | Parse errors with file and line information |
-| Quality | Mutable defaults, bare except, TODO markers, oversized functions, basic naming signals |
+| Quality | Mutable defaults, bare except, TODO markers, basic naming signals |
 | Complexity | Approximate cyclomatic complexity per function |
-| Maintainability | Long functions and complexity-oriented signals |
+| Architecture | Cycles in the local absolute-import graph |
+| Maintainability | Long functions and deep nesting |
+| Performance | Selected allocation-related patterns |
 | Standards | Trailing whitespace, tabs, configurable line-length checks |
 | Security | Risky calls such as eval / exec, unsafe deserialization signals, shell execution, credential-like literals |
-| Dependencies | Declared packages and imports discovered in source files |
+| Dependencies | Declared packages and imports discovered in supported requirements files |
 
-The built-in checks are conservative and do not implement every Python style or security rule. Optional tools such as Ruff and Bandit can add further coverage in future integrations.
+The built-in checks are conservative and do not implement every Python style or security rule. The architecture analyzer currently focuses on absolute local imports. Dependency analysis is not a vulnerability audit.
 
 ## Quality score
 

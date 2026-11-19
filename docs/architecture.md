@@ -11,6 +11,20 @@ Python Scanner has one analysis engine and multiple presentation layers.
 - **CLI** parses arguments and invokes the engine.
 - **Desktop** is an optional Kivy client that invokes the same engine.
 
+## Analysis modules
+
+| Analyzer | Responsibility |
+|---|---|
+| Syntax | Parser diagnostics |
+| Quality | Common correctness and maintainability signals |
+| Complexity | Approximate cyclomatic complexity |
+| Architecture | Local import-cycle detection |
+| Maintainability | Function length and nesting depth |
+| Performance | Selected allocation-related code patterns |
+| Standards | Whitespace, indentation, and line length |
+| Security | Common risky API patterns and credential-like strings |
+| Dependencies | Compare imports with supported requirements manifests |
+
 ## Design constraints
 
 1. Core modules must not depend on Kivy.

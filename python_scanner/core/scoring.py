@@ -17,7 +17,8 @@ def calculate_scores(findings: list[Finding]) -> tuple[int, dict[str, int]]:
         category: max(0, 100 - sum(values))
         for category, values in sorted(categories.items())
     }
-    for category in ("syntax", "quality", "complexity", "maintainability",
-                     "standards", "security", "dependencies"):
+    for category in ("syntax", "quality", "complexity", "architecture",
+                     "maintainability", "performance", "standards",
+                     "security", "dependencies"):
         category_scores.setdefault(category, 100)
     return overall, category_scores

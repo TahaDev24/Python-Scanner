@@ -3,8 +3,11 @@ from __future__ import annotations
 import time
 from pathlib import Path
 
+from python_scanner.analyzers.architecture import ArchitectureAnalyzer
 from python_scanner.analyzers.complexity import ComplexityAnalyzer
 from python_scanner.analyzers.dependencies import DependencyAnalyzer
+from python_scanner.analyzers.maintainability import MaintainabilityAnalyzer
+from python_scanner.analyzers.performance import PerformanceAnalyzer
 from python_scanner.analyzers.quality import QualityAnalyzer
 from python_scanner.analyzers.security import SecurityAnalyzer
 from python_scanner.analyzers.standards import StandardsAnalyzer
@@ -22,9 +25,11 @@ class Scanner:
         self.config = config or ScannerConfig()
         self.analyzers = [
             SyntaxAnalyzer(), QualityAnalyzer(), ComplexityAnalyzer(),
+            MaintainabilityAnalyzer(), PerformanceAnalyzer(),
             StandardsAnalyzer(self.config.max_line_length), SecurityAnalyzer(),
         ]
         self.dependency_analyzer = DependencyAnalyzer()
+        self.architecture_analyzer = ArchitectureAnalyzer()
 
     def scan(self, target: str | Path) -> ScanResult:
         started = time.perf_counter()
@@ -51,6 +56,7 @@ class Scanner:
                     result.errors.append(f"{relative} [{analyzer.name}]: {exc}")
         if path.is_dir():
             result.findings.extend(self.dependency_analyzer.analyze_project(path, files))
+            result.findings.extend(self.architecture_analyzer.analyze_project(path, files))
         result.findings.sort(key=lambda item: (
             item.path, item.line or 0, item.rule_id, item.message
         ))

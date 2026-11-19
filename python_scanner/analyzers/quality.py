@@ -30,14 +30,6 @@ class QualityAnalyzer:
                         "high", "quality", relative_path, node.lineno,
                         suggestion="Use None as the default and create the mutable value inside the function.",
                     ))
-                end = getattr(node, "end_lineno", node.lineno)
-                if end - node.lineno + 1 > 60:
-                    findings.append(Finding(
-                        "QLT003", "Long function",
-                        f"Function '{node.name}' spans {end - node.lineno + 1} lines.",
-                        "low", "maintainability", relative_path, node.lineno,
-                        suggestion="Consider extracting cohesive blocks into smaller functions.",
-                    ))
                 if not node.name.startswith("_") and not node.name.islower():
                     findings.append(Finding(
                         "QLT004", "Function naming convention",

@@ -51,3 +51,10 @@ def test_invalid_config_value_is_rejected(tmp_path: Path):
         assert "positive integer" in str(exc)
     else:
         raise AssertionError("Invalid config should fail")
+
+
+def test_local_import_cycle_is_reported(tmp_path: Path):
+    (tmp_path / "alpha.py").write_text("import beta\n", encoding="utf-8")
+    (tmp_path / "beta.py").write_text("import alpha\n", encoding="utf-8")
+    result = Scanner().scan(tmp_path)
+    assert any(item.rule_id == "ARC001" for item in result.findings)
